@@ -316,7 +316,7 @@ ifstream getFile(string path)
             cout << endl << "File at \"" << path << "\" does not exist.";
         }
     }
-    // Since no / invalid path, query the user for a path
+    // Since no / invalid path, query the user for a path (Braeden)
 
     cout << endl << "Enter path to file or 0 to exit: ";
     cin >> path;
@@ -357,93 +357,89 @@ int main(int argc, char* argv[]) {
     // Create the max heap that will be used during the operations (Braeden)
     MaxHeap emailQueue;
 
-    // true  -> NEXT is allowed
-    // false -> NEXT is not allowed until READ occurs
-    bool nextAllowed = true;
-
-    // true  -> READ is allowed because NEXT was most recently performed
-    // false -> READ is not currently allowed
-    bool readAllowed = false;
-
+    // Create string line for usage in line-by-line commands (ChatGPT)
     string line;
 
+    // While the file has lines (ChatGPT)
     while (getline(file, line)) {
-        // Ignore completely empty lines.
+        // Ignore completely empty lines. (ChatGPT)
         if (line.empty()) {
             continue;
         }
 
-        // EMAIL command
+        // EMAIL command (ChatGPT)
         if (line.rfind("EMAIL ", 0) == 0) {
+            // Get the string post the EMAIL command to get the provided arguments (ChatGPT)
             string data = line.substr(6);
 
+            // Define the string values the program is looking for in the arguments (ChatGPT)
             string category;
             string subject;
             string date;
 
+            // Create a string stream to read through the string data (ChatGPT)
             stringstream ss(data);
 
+            // If the program can't assign category from ss then try the next line (ChatGPT)
             if (!getline(ss, category, ',')) {
                 continue;
             }
 
+            // If the program can't assign subject from ss then try the next line (ChatGPT)
             if (!getline(ss, subject, ',')) {
                 continue;
             }
 
+            // If the program can't assign date from ss then try the next line (ChatGPT)
             if (!getline(ss, date)) {
                 continue;
             }
 
+            // Create a new email using the data and insert it into the heap (ChatGPT)
             Email email(category, subject, date);
             emailQueue.insert(email);
-
-            // EMAIL does not change whether NEXT/READ is required.
         }
 
-        // NEXT command
+        // NEXT command (ChatGPT)
         else if (line == "NEXT") {
-            // NEXT is invalid when there are no emails or when the
-            // previous NEXT has not been followed by READ.
-            if (emailQueue.empty() || !nextAllowed) {
-                continue;
+            // If the MaxHeap is empty then inform the user that there are no emails to get next (Braeden)
+            if (emailQueue.empty() ) {
+                cout << endl << "There are no emails to get next" << endl;
             }
-
-            const Email& email = emailQueue.getMax();
-
-            cout << "Next email:" << endl;
-            cout << "Sender: " << email.getCategory() << endl;
-            cout << "Subject: " << email.getSubject() << endl;
-            cout << "Date: " << email.getDate() << endl;
-
-            nextAllowed = false;
-            readAllowed = true;
+            else
+            {
+                // Get the max value of the email MaxHeap (ChatGPT)
+                const Email& email = emailQueue.getMax();
+                // Print the email that was recieved (ChatGPT)
+                cout << endl << "Next email:" << endl;
+                cout << "\tSender: " << email.getCategory() << endl;
+                cout << "\tSubject: " << email.getSubject() << endl;
+                cout << "\tDate: " << email.getDate() << endl;
+            }
         }
 
-        // READ command
+        // READ command (ChatGPT)
         else if (line == "READ") {
-            // READ is invalid when there are no emails or when NEXT
-            // has not been performed since the previous READ.
-            if (emailQueue.empty() || !readAllowed) {
-                continue;
+            // If the Email MaxHeap is empty then inform the user that there are no emails to read (Braeden)
+            if (emailQueue.empty()) {
+                cout << endl << "There are no emails to read" << endl;
             }
-
-            emailQueue.removeMax();
-
-            nextAllowed = true;
-            readAllowed = false;
+            else
+            {
+                // Remove the highest priority email as the user has read it (ChatGPT)
+                emailQueue.removeMax();
+            }
         }
 
-        // COUNT command
+        // COUNT command (ChatGPT)
         else if (line == "COUNT") {
-            cout << "There are " << emailQueue.size()
+            // Print how many emails are left in the MaxHeap (ChatGPT)
+            cout << endl << "There are " << emailQueue.size()
                  << " emails to read." << endl;
         }
-
-        // Any other command is simply ignored.
     }
-
+    // Close the file (ChatGPT)
     file.close();
-
-    return 0;
+    // End the program (ChatGPT)
+    return 1;
 }
