@@ -33,26 +33,17 @@ Author: Braeden Rebel (Braeden)
 Creation Date: 9/31/2026
 Revision Date: 10/01/2026
 */
-// Include various packages
+// Include various packages (ChatGPT)
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <optional>
 
-// Use std for the standard input output string functionality
+// Use std for the standard input output string functionality (ChatGPT)
 using namespace std;
 
-/*
-Class: Email
-Description: A class that represents a single email and can perform comparisons or prints
-Properties:
-    private string category
-    private string subject
-    private string date
-    private int id
-*/
+// A class that represents a single email and can perform comparisons or prints (ChatGPT)
 // Start Email definition (ChatGPT)
 class Email {
 // Define private properties of the Email (ChatGPT)
@@ -63,12 +54,7 @@ private:
     inline static int EMAIL_ID = 0;
     int id;
 
-    /*
-    Method: getCategoryPriority();
-    Return: int
-    Description: Helper function that returns the priority value of the emails category
-    Author: Braeden, ChatGPT
-    */
+    // Helper function that returns the priority value of the emails category (Braden)
     int getCategoryPriority() const {
         if (category == "Boss")
             return 5; // Boss has priority of 5
@@ -81,34 +67,19 @@ private:
         return 1; // OtherPerson has priority of 1, category has to be OtherPerson as it is last option
     }
 
-    /*
-    Method: getYearPriority();
-    Return: int
-    Description: Helper function that returns the priority value of the year in date
-    Author: Braeden
-    */
+    // Helper function that returns the priority value of the year in date (Braeden)
     int getYearPriority() const
     {
         return stoi(date.substr(6, 4));
     }
 
-    /*
-    Method: getMonthPriority();
-    Return: int
-    Description: Helper function that returns the priority value of the month in date
-    Author: Braeden
-    */
+    // Helper function that returns the priority value of the month in date (Braeden)
     int getMonthPriority() const
     {
         return stoi(date.substr(0, 2));
     }
 
-    /*
-    Method: getDayPriority();
-    Return: int
-    Description: Helper function that returns the priority value of the day in date
-    Author: Braeden
-    */
+    // Helper function that returns the priority value of the day in date (Braeden)
     int getDayPriority() const
     {
         return stoi(date.substr(3, 2));
@@ -119,32 +90,17 @@ public:
     Email(const string& category, const string& subject, const string& date)
         : category(category), subject(subject), date(date), id(EMAIL_ID++) {}
 
-    /*
-    Method: getCategory();
-    Return: string
-    Description: Returns the category private property
-    Author: ChatGPT
-    */
+    // Returns the category private property (ChatGPT)
     string getCategory() const {
         return category;
     }
 
-    /*
-    Method: getSubject();
-    Return: string
-    Description: Returns the subject private property
-    Author: ChatGPT
-    */
+    // Returns the subject private property (ChatGPT)
     string getSubject() const {
         return subject;
     }
 
-    /*
-    Method: getDate();
-    Return: string
-    Description: Returns the date private property
-    Author: ChatGPT
-    */
+    // Returns the date private property (ChatGPT)
     string getDate() const {
         return date;
     }
@@ -152,56 +108,50 @@ public:
     // Overload the greater-than operator for comparing between emails (Braeden)
     bool operator>(const Email& other)
     {
-        // First try to compare by categories
+        // First try to compare by categories (Braeden)
         if (category != other.category)
         {
-            // The email with the higher category priority is greater than
+            // The email with the higher category priority is greater than (Braeden)
             return getCategoryPriority() > other.getCategoryPriority();
         }
-        // Categories are same so try to sort by date
+        // Categories are same so try to sort by date (Braeden)
         else if (date != other.date)
         {
-            // Dates are different, try to sort by year first
+            // Dates are different, try to sort by year first (Braeden)
             int yearPriority = getYearPriority();
             int otherYearPriorty = other.getYearPriority();
             if (yearPriority != otherYearPriorty)
             {
-                // The email with the higher year priority is greater than
+                // The email with the higher year priority is greater than (Braeden)
                 return yearPriority > otherYearPriorty;
             }
             else
             {
-                // Years are same so try to sort by month
+                // Years are same so try to sort by month (Braeden)
                 int monthPriority = getMonthPriority();
                 int otherMonthPriority = other.getMonthPriority();
                 if (monthPriority != otherMonthPriority)
                 {
-                    // The email with higher month priority is greater than
+                    // The email with higher month priority is greater than (Braeden)
                     return monthPriority > otherMonthPriority;
                 }
-                // Months are equal but date is inequal so days are automatically different
+                // Months are equal but date is inequal so days are automatically different (Braeden)
                 int dayPriority = getDayPriority();
                 int otherDayPriority = other.getDayPriority();
-                // Email with higher day priority is greater than
+                // Email with higher day priority is greater than (Braeden)
                 return dayPriority > otherDayPriority;
             }
         }
-        // Dates and category are same, so to keep most recent email prioritized, use id
+        // Dates and category are same, so to keep most recent email prioritized, use id (Braeden)
         else
         {
-            // Email with higher id is more recent and thus email with higher id is greater than
+            // Email with higher id is more recent and thus email with higher id is greater than (Braeden)
             return id > other.id;
         }
     }
 };
 
-/*
-Class: MaxHeap
-Description: A list-based MaxHeap that stores Email objects and sort them by priority
-Properties:
-    private vector<Email> heap
-Author: ChatGPT
-*/
+// A list-based MaxHeap that stores Email objects and sort them by priority (ChatGPT)
 class MaxHeap {
 private:
     // Internal vector of emails for list-based implementation (ChatGPT)
