@@ -188,8 +188,8 @@ public:
         // Dates and category are same, so to keep most recent email prioritized, use id
         else
         {
-            // Email with lower id is more recent and thus email with lower id is greater than
-            return other.id > id;
+            // Email with higher id is more recent and thus email with higher id is greater than
+            return id > other.id;
         }
     }
 };
