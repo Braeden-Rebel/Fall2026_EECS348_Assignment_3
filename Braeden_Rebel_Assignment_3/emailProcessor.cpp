@@ -39,6 +39,7 @@ Revision Date: 10/01/2026
 #include <sstream>
 #include <string>
 #include <vector>
+#include <optional>
 
 // Use std for the standard input output string functionality
 using namespace std;
@@ -295,19 +296,65 @@ public:
     }
 };
 
+// Function that will query the user until the user provides a proper path or indicates that they want to exit (Braeden)
+// The function will either return the indicated file or NULL if the user indicated that they wanted to exit (Braeden)
+ifstream getFile(string path)
+{
+    // If a path was provdied then try to get file (Braeden)
+    if (path != "")
+    {
+        // Try to create a file using the provided path and then check if it was opened (Braden)
+        ifstream file(path);
+        if (file.is_open())
+        {
+            // Return the found file to the user (Braeden)
+            return file;
+        }
+        else
+        {
+            // Inform the user that the path does not exist and could not be opened (Braeden)
+            cout << endl << "File at \"" << path << "\" does not exist.";
+        }
+    }
+    // Since no / invalid path, query the user for a path
+
+    cout << endl << "Enter path to file or 0 to exit: ";
+    cin >> path;
+    // If the user indicates they want to exit then return NULL as no file was provided (Braeden)
+    if (path == "0")
+    {
+        return NULL;
+    }
+    else
+    {
+        // If the user inputs something other than zero, try to get the file with that path (Braeden)
+        return getFile(path);
+    }
+}
+
+// Main function for program (Braeden)
 int main(int argc, char* argv[]) {
-    // The input file is supplied as a command-line argument.
-    // Example: ./assignment3 input.txt
-    if (argc < 2) {
-        return 0;
+    // Print a warning if the user puts in too many arguments (Braeden)
+    if (argc > 2) {
+        cout << "Only one argument <filepath> is needed for the program";
     }
 
-    ifstream inputFile(argv[1]);
+    // Assume no path given but set path if the program was started with a filepath argument (Braeden)
+    string path = "";
+    if (argc > 1)
+    {
+        path = argv[1];
+    }
+    // Get the file to compute or get nothing (Braeden)
+    ifstream file = getFile(path);
 
-    if (!inputFile.is_open()) {
-        return 0;
+    // Check if getFile actually returned a file or just null (Braeden)
+    if (&file == NULL)
+    {
+        return 1;
     }
 
+    // Create the max heap that will be used during the operations (Braeden)
     MaxHeap emailQueue;
 
     // true  -> NEXT is allowed
@@ -320,7 +367,7 @@ int main(int argc, char* argv[]) {
 
     string line;
 
-    while (getline(inputFile, line)) {
+    while (getline(file, line)) {
         // Ignore completely empty lines.
         if (line.empty()) {
             continue;
@@ -396,7 +443,7 @@ int main(int argc, char* argv[]) {
         // Any other command is simply ignored.
     }
 
-    inputFile.close();
+    file.close();
 
     return 0;
 }
