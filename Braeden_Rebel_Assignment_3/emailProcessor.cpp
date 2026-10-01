@@ -194,87 +194,106 @@ public:
     }
 };
 
+/*
+Class: MaxHeap
+Description: A list-based MaxHeap that stores Email objects and sort them by priority
+Properties:
+    private vector<Email> heap
+Author: ChatGPT
+*/
 class MaxHeap {
 private:
+    // Internal vector of emails for list-based implementation (ChatGPT)
     vector<Email> heap;
 
+    // Heapify up function that follows standard heapify up procedure to keep structure, takes current index (ChatGPT)
     void heapifyUp(int index) {
+        // Try to keep heapifying up until index is at index 0 (ChatGPT)
         while (index > 0) {
+            // Get parent index (ChatGPT)
             int parent = (index - 1) / 2;
-
+            // If the Email at the current index is not greater than the parent then break (Braeden)
             if (!(heap[index] > heap[parent])) {
                 break;
             }
-
+            // Swap the two Emails at the index and parent index since the Email at the index is greater than the Email at the parent index (ChatGPT)
             swap(heap[index], heap[parent]);
+            // Set new target index to parent index as the current email is now stored there (ChatGPT)
             index = parent;
         }
     }
 
+    // Heapify down function that follows standard heapify down procedure to keep structure, takes curent index (ChatGPT)
     void heapifyDown(int index) {
-        int size = static_cast<int>(heap.size());
-
+        // Get size of heap as an integer (ChatGPT)
+        int heapSize = size();
+        // Loop until the heapifyDown is broken out of (ChatGPT)
         while (true) {
+            // Get left and right child indexes (ChatGPT)
             int left = 2 * index + 1;
             int right = 2 * index + 2;
+            // Start with highest index being the current index (ChatGPT)
             int highest = index;
 
-            if (left < size && heap[left] > heap[highest]) {
+            // If the left child exists and is greater than the current Email then the highest is left (Braeden)
+            if (left < heapSize && heap[left] > heap[highest]) {
                 highest = left;
             }
-
-            if (right < size && heap[right] > heap[highest]) {
+            // If the right child exists and is greater than both the currentEmail and the leftEmail then it is the highest Email (Braeden)
+            if (right < heapSize && heap[right] > heap[highest]) {
                 highest = right;
             }
-
+            // If the current Email is the highest then there is no more need to heapify down (ChatGPT)
             if (highest == index) {
                 break;
             }
-
+            // Since current email is not highest then swap the current Email and highest Email (ChatGPT)
             swap(heap[index], heap[highest]);
+            // Set index to highest to keep the index properly targeted on current Email (ChatGPT)
             index = highest;
         }
     }
 
 public:
+    // Insert an Email into the MaxHeap (ChatGPT)
     void insert(const Email& email) {
+        // Push the new email into the back of the MaxHeap (ChatGPT)
         heap.push_back(email);
-        heapifyUp(static_cast<int>(heap.size()) - 1);
+        // Heapify up at the last index of the vector to maintain sorting (ChatGPT)
+        heapifyUp(size()- 1);
     }
 
+    // Get the max email in the MaxHeap (ChatGPT)
     Email getMax() const {
-        return heap[0];
+        return heap[0]; // Return the first element in the vector as it is the max email in the MaxHeap (ChatGPT)
     }
 
+    // Remove the top value of the heap (ChatGPT)
     void removeMax() {
+        // No need to remove if the heap is empty (ChatGPT)
         if (heap.empty()) {
             return;
         }
-
+        // Set the first element in the heap to match the element in the back of the heap (ChatGPT)
         heap[0] = heap.back();
+        // Remove the back element (ChatGPT)
         heap.pop_back();
-
+        // If the removed element wasn't the last, heapify down the element that replaced the initial max to maintain sorting (ChatGPT)
         if (!heap.empty()) {
             heapifyDown(0);
         }
     }
 
+    // Return if the MaxHeap is empty or not (ChatGPT)
     bool empty() const {
-        return heap.empty();
+        return heap.empty(); // Return if the internal vector is empty since it matches if the MaxHeap is empty or not (ChatGPT)
     }
 
+    // Return the size of the MaxHeap as an integer (ChatGPT)
     int size() const {
-        return static_cast<int>(heap.size());
+        return static_cast<int>(heap.size()); // Return the size of the internal vector as it matches the MaxHeap's size, but convert to an integer first (ChatGPT)
     }
 };
-
-bool validCategory(const string& category) {
-    return category == "Boss" ||
-           category == "Subordinate" ||
-           category == "Peer" ||
-           category == "ImportantPerson" ||
-           category == "OtherPerson";
-}
 
 int main(int argc, char* argv[]) {
     // The input file is supplied as a command-line argument.
@@ -326,10 +345,6 @@ int main(int argc, char* argv[]) {
             }
 
             if (!getline(ss, date)) {
-                continue;
-            }
-
-            if (!validCategory(category)) {
                 continue;
             }
 
