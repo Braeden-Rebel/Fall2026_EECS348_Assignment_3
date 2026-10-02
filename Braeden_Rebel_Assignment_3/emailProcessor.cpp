@@ -39,6 +39,7 @@ Revision Date: 10/01/2026
 #include <sstream>
 #include <string>
 #include <vector>
+#include <optional>
 
 // Use std for the standard input output string functionality (ChatGPT)
 using namespace std;
@@ -248,7 +249,7 @@ public:
 
 // Function that will query the user until the user provides a proper path or indicates that they want to exit (Braeden)
 // The function will either return the indicated file or NULL if the user indicated that they wanted to exit (Braeden)
-ifstream getFile(string path)
+optional<ifstream> getFile(string path)
 {
     // If a path was provdied then try to get file (Braeden)
     if (path != "")
@@ -258,7 +259,7 @@ ifstream getFile(string path)
         if (file.is_open())
         {
             // Return the found file to the user (Braeden)
-            return file;
+            return move(file);
         }
         else
         {
@@ -273,7 +274,7 @@ ifstream getFile(string path)
     // If the user indicates they want to exit then return NULL as no file was provided (Braeden)
     if (path == "0")
     {
-        return NULL;
+        return nullopt;
     }
     else
     {
@@ -296,13 +297,15 @@ int main(int argc, char* argv[]) {
         path = argv[1];
     }
     // Get the file to compute or get nothing (Braeden)
-    ifstream file = getFile(path);
+    optional<ifstream> potentialFile = getFile(path);
 
     // Check if getFile actually returned a file or just null (Braeden)
-    if (&file == NULL)
+    if (!potentialFile.has_value())
     {
         return 1;
     }
+    // File is not null so convert to regular ifstream (Braeden)
+    ifstream file = move(*potentialFile);
 
     // Create the max heap that will be used during the operations (Braeden)
     MaxHeap emailQueue;
@@ -315,6 +318,10 @@ int main(int argc, char* argv[]) {
         // Ignore completely empty lines. (ChatGPT)
         if (line.empty()) {
             continue;
+        }
+        else while(!line.empty() && line.back() == '\r')
+        {
+            line.pop_back();
         }
 
         // EMAIL command (ChatGPT)
